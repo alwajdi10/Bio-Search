@@ -1,0 +1,430 @@
+"""
+Image Embeddings for Visual Search
+Uses CLIP model for image-text multimodal embeddings.
+Enables: "find structures similar to this", "search for microscopy images of cells"
+"""
+
+import torch
+import numpy as np
+from typing import List, Union, Optional
+from pathlib import Path
+from PIL import Image
+import logging
+
+# Import transformers for CLIP
+try:
+    from transformers import CLIPProcessor, CLIPModel
+    CLIP_AVAILABLE = True
+except ImportError:
+    CLIP_AVAILABLE = False
+    logging.warning("transformers not installed. Image search will be limited.")
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+class ImageEmbeddingGenerator:
+    """
+    Generate embeddings for images using CLIP.
+    Enables visual similarity search and text-to-image search.
+    """
+    
+    def __init__(
+        self,
+        model_name: str = "openai/clip-vit-base-patch32",
+        device: str = None
+    ):
+        """
+        Initialize CLIP model.
+        
+        Args:
+            model_name: HuggingFace CLIP model
+            device: 'cuda', 'cpu', or None for auto
+        """
+        if not CLIP_AVAILABLE:
+            raise ImportError(
+                "transformers package required. Install with: pip install transformers"
+            )
+        
+        # Set device
+        if device is None:
+            self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        else:
+            self.device = device
+        
+        logger.info(f"Loading CLIP model: {model_name}")
+        logger.info(f"Using device: {self.device}")
+        
+        # Load CLIP model and processor
+        self.model = CLIPModel.from_pretrained(model_name).to(self.device)
+        self.processor = CLIPProcessor.from_pretrained(model_name)
+        
+        # Set to eval mode
+        self.model.eval()
+        
+        # Embedding dimension
+        self.embedding_dim = self.model.config.projection_dim
+        
+        logger.info(f"✓ CLIP model loaded (embedding dim: {self.embedding_dim})")
+    
+    def embed_image(self, image: Union[str, Path, Image.Image]) -> np.ndarray:
+        """
+        Generate embedding for a single image.
+        
+        Args:
+            image: Image path or PIL Image
+            
+        Returns:
+            Embedding vector (numpy array)
+        """
+        # Load image if path provided
+        if isinstance(image, (str, Path)):
+            image = Image.open(image).convert("RGB")
+        
+        # Process image
+        inputs = self.processor(images=image, return_tensors="pt")
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        
+        # Generate embedding
+        with torch.no_grad():
+            image_features = self.model.get_image_features(**inputs)
+        
+        # Normalize
+        image_features = image_features / image_features.norm(dim=-1, keepdim=True)
+        
+        # Convert to numpy
+        embedding = image_features.cpu().numpy()[0]
+        
+        return embedding
+    
+    def embed_text(self, text: Union[str, List[str]]) -> np.ndarray:
+        """
+        Generate embedding for text query.
+        Enables text-to-image search: "find images of cancer cells"
+        
+        Args:
+            text: Text query or list of queries
+            
+        Returns:
+            Embedding vector(s)
+        """
+        if isinstance(text, str):
+            text = [text]
+            return_single = True
+        else:
+            return_single = False
+        
+        # Process text
+        inputs = self.processor(text=text, return_tensors="pt", padding=True)
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        
+        # Generate embeddings
+        with torch.no_grad():
+            text_features = self.model.get_text_features(**inputs)
+        
+        # Normalize
+        text_features = text_features / text_features.norm(dim=-1, keepdim=True)
+        
+        # Convert to numpy
+        embeddings = text_features.cpu().numpy()
+        
+        if return_single:
+            return embeddings[0]
+        return embeddings
+    
+    def batch_embed_images(
+        self, 
+        image_paths: List[Union[str, Path]],
+        batch_size: int = 16
+    ) -> List[np.ndarray]:
+        """
+        Embed multiple images efficiently.
+        
+        Args:
+            image_paths: List of image paths
+            batch_size: Images per batch
+            
+        Returns:
+            List of embedding vectors
+        """
+        embeddings = []
+        
+        for i in range(0, len(image_paths), batch_size):
+            batch_paths = image_paths[i:i+batch_size]
+            
+            # Load images
+            images = []
+            for path in batch_paths:
+                try:
+                    img = Image.open(path).convert("RGB")
+                    images.append(img)
+                except Exception as e:
+                    logger.warning(f"Failed to load {path}: {e}")
+                    # Add zero vector for failed images
+                    embeddings.append(np.zeros(self.embedding_dim))
+                    continue
+            
+            if not images:
+                continue
+            
+            # Process batch
+            inputs = self.processor(images=images, return_tensors="pt", padding=True)
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
+            # Generate embeddings
+            with torch.no_grad():
+                image_features = self.model.get_image_features(**inputs)
+            
+            # Normalize
+            image_features = image_features / image_features.norm(dim=-1, keepdim=True)
+            
+            # Convert to numpy and add to list
+            batch_embeddings = image_features.cpu().numpy()
+            embeddings.extend(batch_embeddings)
+            
+            logger.info(f"Embedded {min(i+batch_size, len(image_paths))}/{len(image_paths)} images")
+        
+        return embeddings
+    
+    def compute_similarity(
+        self, 
+        embedding1: np.ndarray, 
+        embedding2: np.ndarray
+    ) -> float:
+        """
+        Compute cosine similarity between two embeddings.
+        
+        Args:
+            embedding1: First embedding
+            embedding2: Second embedding
+            
+        Returns:
+            Similarity score (0-1)
+        """
+        return np.dot(embedding1, embedding2)
+    
+    def find_similar_images(
+        self,
+        query_embedding: np.ndarray,
+        image_embeddings: List[np.ndarray],
+        top_k: int = 5
+    ) -> List[tuple]:
+        """
+        Find most similar images to a query.
+        
+        Args:
+            query_embedding: Query embedding
+            image_embeddings: List of image embeddings
+            top_k: Number of results
+            
+        Returns:
+            List of (index, similarity_score) tuples
+        """
+        # Compute similarities
+        similarities = [
+            (idx, self.compute_similarity(query_embedding, img_emb))
+            for idx, img_emb in enumerate(image_embeddings)
+        ]
+        
+        # Sort by similarity
+        similarities.sort(key=lambda x: x[1], reverse=True)
+        
+        return similarities[:top_k]
+    
+    def text_to_image_search(
+        self,
+        text_query: str,
+        image_embeddings: List[np.ndarray],
+        top_k: int = 5
+    ) -> List[tuple]:
+        """
+        Search images using text description.
+        
+        Example: "protein crystal structure" → finds protein 3D images
+        
+        Args:
+            text_query: Natural language query
+            image_embeddings: Pre-computed image embeddings
+            top_k: Number of results
+            
+        Returns:
+            List of (index, similarity_score) tuples
+        """
+        # Embed text query
+        text_embedding = self.embed_text(text_query)
+        
+        # Find similar images
+        return self.find_similar_images(text_embedding, image_embeddings, top_k)
+
+
+class ImageSearchEngine:
+    """
+    High-level image search engine.
+    Combines image manager with CLIP embeddings.
+    """
+    
+    def __init__(
+        self,
+        image_dir: str = "data/images",
+        use_clip: bool = True
+    ):
+        """
+        Initialize search engine.
+        
+        Args:
+            image_dir: Directory with cached images
+            use_clip: Whether to use CLIP embeddings
+        """
+        self.image_dir = Path(image_dir)
+        self.use_clip = use_clip and CLIP_AVAILABLE
+        
+        if self.use_clip:
+            self.embedding_gen = ImageEmbeddingGenerator()
+            logger.info("✓ Image search with CLIP enabled")
+        else:
+            self.embedding_gen = None
+            logger.info("⚠ Image search without embeddings (limited)")
+        
+        # Load image index
+        self.images = []
+        self.embeddings = []
+        self._load_image_index()
+    
+    def _load_image_index(self):
+        """Load and index all images."""
+        from image_manager import ImageManager
+        
+        manager = ImageManager(cache_dir=str(self.image_dir))
+        self.images = manager.get_all_cached_images()
+        
+        logger.info(f"Found {len(self.images)} cached images")
+        
+        # Generate embeddings if CLIP available
+        if self.use_clip and self.images:
+            logger.info("Generating CLIP embeddings for images...")
+            
+            image_paths = [img.local_path for img in self.images if img.local_path]
+            self.embeddings = self.embedding_gen.batch_embed_images(image_paths)
+            
+            # Store embeddings in image objects
+            for img, emb in zip(self.images, self.embeddings):
+                img.embedding = emb.tolist()
+            
+            logger.info(f"✓ Generated {len(self.embeddings)} embeddings")
+    
+    def search_by_text(self, query: str, top_k: int = 5) -> List[dict]:
+        """
+        Search images using text description.
+        
+        Args:
+            query: Text query (e.g., "2D chemical structure")
+            top_k: Number of results
+            
+        Returns:
+            List of results with images and scores
+        """
+        if not self.use_clip:
+            logger.warning("CLIP not available. Returning all images.")
+            return [
+                {
+                    "image": img,
+                    "score": 1.0,
+                    "url": img.url or f"file://{img.local_path}"
+                }
+                for img in self.images[:top_k]
+            ]
+        
+        # Search using CLIP
+        results = self.embedding_gen.text_to_image_search(
+            query, 
+            self.embeddings, 
+            top_k
+        )
+        
+        return [
+            {
+                "image": self.images[idx],
+                "score": float(score),
+                "url": self.images[idx].url or f"file://{self.images[idx].local_path}"
+            }
+            for idx, score in results
+        ]
+    
+    def search_similar(
+        self, 
+        image_path: Union[str, Path], 
+        top_k: int = 5
+    ) -> List[dict]:
+        """
+        Find similar images to a query image.
+        
+        Args:
+            image_path: Path to query image
+            top_k: Number of results
+            
+        Returns:
+            List of similar images
+        """
+        if not self.use_clip:
+            return []
+        
+        # Embed query image
+        query_emb = self.embedding_gen.embed_image(image_path)
+        
+        # Find similar
+        results = self.embedding_gen.find_similar_images(
+            query_emb,
+            self.embeddings,
+            top_k
+        )
+        
+        return [
+            {
+                "image": self.images[idx],
+                "score": float(score),
+                "url": self.images[idx].url or f"file://{self.images[idx].local_path}"
+            }
+            for idx, score in results
+        ]
+
+
+# Example usage
+if __name__ == "__main__":
+    print("="*80)
+    print("IMAGE EMBEDDING & SEARCH TEST")
+    print("="*80)
+    
+    if not CLIP_AVAILABLE:
+        print("\n⚠️  transformers package not installed")
+        print("Install with: pip install transformers")
+        exit(1)
+    
+    # Test 1: Initialize embedding generator
+    print("\n1. Initializing CLIP model...")
+    generator = ImageEmbeddingGenerator()
+    print(f"✓ Model loaded (dim: {generator.embedding_dim})")
+    
+    # Test 2: Text embeddings
+    print("\n2. Testing text embeddings...")
+    text_queries = [
+        "chemical structure diagram",
+        "protein 3D structure",
+        "biological pathway diagram"
+    ]
+    
+    text_embeddings = [generator.embed_text(q) for q in text_queries]
+    print(f"✓ Generated {len(text_embeddings)} text embeddings")
+    
+    # Test 3: Image search engine
+    print("\n3. Testing image search...")
+    search_engine = ImageSearchEngine(use_clip=True)
+    
+    # Search by text
+    results = search_engine.search_by_text("chemical compound structure", top_k=3)
+    print(f"\nText search: 'chemical compound structure'")
+    print(f"Found {len(results)} results:")
+    for r in results:
+        print(f"  - {r['image'].caption} (score: {r['score']:.3f})")
+    
+    print("\n" + "="*80)
+    print("✅ Tests completed!")
