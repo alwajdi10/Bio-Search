@@ -12,6 +12,9 @@ AI-powered research assistant that searches across biological databases: papers,
 - 💬 **Conversational** - Maintains context and suggests follow-up questions
 
 ---
+## ✨ Pipeline 
+<img width="3677" height="4630" alt="Pipeline" src="https://github.com/user-attachments/assets/6a85b2d9-9611-4e69-a183-5c6ca81661c7" />
+
 
 ## 🚀 Quick Start
 
