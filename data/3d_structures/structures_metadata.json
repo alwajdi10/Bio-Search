@@ -1,0 +1,458 @@
+[
+  {
+    "pdb_id": "7JHP",
+    "category": "proteins/kinases",
+    "structure_file": "data\\3d_structures\\proteins\\kinases\\7jhp.cif",
+    "url": "https://www.rcsb.org/structure/7JHP",
+    "title": "Crystal structure of HRas in complex with the Ras-binding and cysteine-rich domains of CRaf-kinase",
+    "keywords": "SIGNALING PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.766
+    ]
+  },
+  {
+    "pdb_id": "4MXO",
+    "category": "proteins/kinases",
+    "structure_file": "data\\3d_structures\\proteins\\kinases\\4mxo.cif",
+    "url": "https://www.rcsb.org/structure/4MXO",
+    "title": "human Src kinase bound to kinase inhibitor bosutinib",
+    "keywords": "TRANSFERASE/TRANSFERASE INHIBITOR",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.105
+    ]
+  },
+  {
+    "pdb_id": "5EZ3",
+    "category": "proteins/kinases",
+    "structure_file": "data\\3d_structures\\proteins\\kinases\\5ez3.cif",
+    "url": "https://www.rcsb.org/structure/5EZ3",
+    "title": "Crystal structure Acyl-CoA dehydrogenase from Brucella melitensis in complex with FAD",
+    "keywords": "OXIDOREDUCTASE",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.15
+    ]
+  },
+  {
+    "pdb_id": "6Q0J",
+    "category": "proteins/kinases",
+    "structure_file": "data\\3d_structures\\proteins\\kinases\\6q0j.cif",
+    "url": "https://www.rcsb.org/structure/6Q0J",
+    "title": "Structure of a MAPK pathway complex",
+    "keywords": "Transferase/PROTEIN BINDING",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      4.9
+    ]
+  },
+  {
+    "pdb_id": "6XM0",
+    "category": "proteins/kinases",
+    "structure_file": "data\\3d_structures\\proteins\\kinases\\6xm0.cif",
+    "url": "https://www.rcsb.org/structure/6XM0",
+    "title": "Consensus structure of SARS-CoV-2 spike at pH 5.5",
+    "keywords": "VIRAL PROTEIN",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      2.7
+    ]
+  },
+  {
+    "pdb_id": "5IU4",
+    "category": "proteins/receptors",
+    "structure_file": "data\\3d_structures\\proteins\\receptors\\5iu4.cif",
+    "url": "https://www.rcsb.org/structure/5IU4",
+    "title": "Crystal structure of stabilized A2A adenosine receptor A2AR-StaR2-bRIL in complex with ZM241385 at 1.7A resolution",
+    "keywords": "MEMBRANE PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      1.72
+    ]
+  },
+  {
+    "pdb_id": "6DDE",
+    "category": "proteins/receptors",
+    "structure_file": "data\\3d_structures\\proteins\\receptors\\6dde.cif",
+    "url": "https://www.rcsb.org/structure/6DDE",
+    "title": "Mu Opioid Receptor-Gi Protein Complex",
+    "keywords": "MEMBRANE PROTEIN",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      3.5
+    ]
+  },
+  {
+    "pdb_id": "4EIY",
+    "category": "proteins/receptors",
+    "structure_file": "data\\3d_structures\\proteins\\receptors\\4eiy.cif",
+    "url": "https://www.rcsb.org/structure/4EIY",
+    "title": "Crystal structure of the chimeric protein of A2aAR-BRIL in complex with ZM241385 at 1.8A resolution",
+    "keywords": "MEMBRANE PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      1.8
+    ]
+  },
+  {
+    "pdb_id": "7TN4",
+    "category": "proteins/receptors",
+    "structure_file": "data\\3d_structures\\proteins\\receptors\\7tn4.cif",
+    "url": "https://www.rcsb.org/structure/7TN4",
+    "title": "Diphosphoinositol polyphosphate phosphohydrolase 1 (DIPP1/NUDT3) in complex with 3-diphosphoinositol 1,2,4,5-tetrakisphosphate (3-PP-IP4), Mg and Fluoride ion",
+    "keywords": "HYDROLASE",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      1.85
+    ]
+  },
+  {
+    "pdb_id": "4ZUD",
+    "category": "proteins/receptors",
+    "structure_file": "data\\3d_structures\\proteins\\receptors\\4zud.cif",
+    "url": "https://www.rcsb.org/structure/4ZUD",
+    "title": "Crystal Structure of Human Angiotensin Receptor in Complex with Inverse Agonist Olmesartan at 2.8A resolution.",
+    "keywords": "MEMBRANE PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.8
+    ]
+  },
+  {
+    "pdb_id": "1M17",
+    "category": "proteins/enzymes",
+    "structure_file": "data\\3d_structures\\proteins\\enzymes\\1m17.cif",
+    "url": "https://www.rcsb.org/structure/1M17",
+    "title": "Epidermal Growth Factor Receptor tyrosine kinase domain with 4-anilinoquinazoline inhibitor erlotinib",
+    "keywords": "TRANSFERASE",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.6
+    ]
+  },
+  {
+    "pdb_id": "4HJO",
+    "category": "proteins/enzymes",
+    "structure_file": "data\\3d_structures\\proteins\\enzymes\\4hjo.cif",
+    "url": "https://www.rcsb.org/structure/4HJO",
+    "title": "Crystal structure of the inactive EGFR tyrosine kinase domain with erlotinib",
+    "keywords": "TRANSFERASE/TRANSFERASE INHIBITOR",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.75
+    ]
+  },
+  {
+    "pdb_id": "5D3Q",
+    "category": "proteins/enzymes",
+    "structure_file": "data\\3d_structures\\proteins\\enzymes\\5d3q.cif",
+    "url": "https://www.rcsb.org/structure/5D3Q",
+    "title": "Dynamin 1 GTPase-BSE fusion dimer complexed with GDP",
+    "keywords": "HYDROLASE",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      1.7
+    ]
+  },
+  {
+    "pdb_id": "3KMD",
+    "category": "proteins/enzymes",
+    "structure_file": "data\\3d_structures\\proteins\\enzymes\\3kmd.cif",
+    "url": "https://www.rcsb.org/structure/3KMD",
+    "title": "Crystal structure of the p53 core domain bound to a full consensus site as a self-assembled tetramer",
+    "keywords": "DNA BINDING PROTEIN/DNA",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.15
+    ]
+  },
+  {
+    "pdb_id": "6LU7",
+    "category": "proteins/enzymes",
+    "structure_file": "data\\3d_structures\\proteins\\enzymes\\6lu7.cif",
+    "url": "https://www.rcsb.org/structure/6LU7",
+    "title": "The crystal structure of COVID-19 main protease in complex with an inhibitor N3",
+    "keywords": "VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.16
+    ]
+  },
+  {
+    "pdb_id": "5IES",
+    "category": "proteins/antibodies",
+    "structure_file": "data\\3d_structures\\proteins\\antibodies\\5ies.cif",
+    "url": "https://www.rcsb.org/structure/5IES",
+    "title": "Crystal structure of VRC01c-HuGL2 Fab from an HIV-1 naive donor in complex with with a germline-targeting gp120 engineered outer domain eOD-GT8 at 2.16 A",
+    "keywords": "IMMUNE SYSTEM/ VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.16
+    ]
+  },
+  {
+    "pdb_id": "6XC4",
+    "category": "proteins/antibodies",
+    "structure_file": "data\\3d_structures\\proteins\\antibodies\\6xc4.cif",
+    "url": "https://www.rcsb.org/structure/6XC4",
+    "title": "Crystal structure of SARS-CoV-2 receptor binding domain in complex with neutralizing antibody CC12.3",
+    "keywords": "IMMUNE SYSTEM/VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.341
+    ]
+  },
+  {
+    "pdb_id": "5VKK",
+    "category": "proteins/antibodies",
+    "structure_file": "data\\3d_structures\\proteins\\antibodies\\5vkk.cif",
+    "url": "https://www.rcsb.org/structure/5VKK",
+    "title": "Crystal structure of Fab fragment of anti-CD22 Epratuzumab",
+    "keywords": "IMMUNE SYSTEM",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.014
+    ]
+  },
+  {
+    "pdb_id": "1HZH",
+    "category": "proteins/antibodies",
+    "structure_file": "data\\3d_structures\\proteins\\antibodies\\1hzh.cif",
+    "url": "https://www.rcsb.org/structure/1HZH",
+    "title": "CRYSTAL STRUCTURE OF THE INTACT HUMAN IGG B12 WITH BROAD AND POTENT ACTIVITY AGAINST PRIMARY HIV-1 ISOLATES: A TEMPLATE FOR HIV VACCINE DESIGN",
+    "keywords": "IMMUNE SYSTEM",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.7
+    ]
+  },
+  {
+    "pdb_id": "7BWJ",
+    "category": "proteins/antibodies",
+    "structure_file": "data\\3d_structures\\proteins\\antibodies\\7bwj.cif",
+    "url": "https://www.rcsb.org/structure/7BWJ",
+    "title": "crystal structure of SARS-CoV-2 antibody with RBD",
+    "keywords": "VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.85
+    ]
+  },
+  {
+    "pdb_id": "6W6V",
+    "category": "proteins/transporters",
+    "structure_file": "data\\3d_structures\\proteins\\transporters\\6w6v.cif",
+    "url": "https://www.rcsb.org/structure/6W6V",
+    "title": "Structure of yeast RNase MRP holoenzyme",
+    "keywords": "HYDROLASE",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      3.0
+    ]
+  },
+  {
+    "pdb_id": "6QNO",
+    "category": "proteins/transporters",
+    "structure_file": "data\\3d_structures\\proteins\\transporters\\6qno.cif",
+    "url": "https://www.rcsb.org/structure/6QNO",
+    "title": "Rhodopsin-Gi protein complex",
+    "keywords": "SIGNALING PROTEIN",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      4.38
+    ]
+  },
+  {
+    "pdb_id": "5I20",
+    "category": "proteins/transporters",
+    "structure_file": "data\\3d_structures\\proteins\\transporters\\5i20.cif",
+    "url": "https://www.rcsb.org/structure/5I20",
+    "title": "Crystal structure of protein",
+    "keywords": "MEMBRANE PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.4
+    ]
+  },
+  {
+    "pdb_id": "3J7Y",
+    "category": "proteins/transporters",
+    "structure_file": "data\\3d_structures\\proteins\\transporters\\3j7y.cif",
+    "url": "https://www.rcsb.org/structure/3J7Y",
+    "title": "Structure of the large ribosomal subunit from human mitochondria",
+    "keywords": "RIBOSOME",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      3.4
+    ]
+  },
+  {
+    "pdb_id": "5WLC",
+    "category": "proteins/transporters",
+    "structure_file": "data\\3d_structures\\proteins\\transporters\\5wlc.cif",
+    "url": "https://www.rcsb.org/structure/5WLC",
+    "title": "The complete structure of the small subunit processome",
+    "keywords": "RIBOSOME",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      3.8
+    ]
+  },
+  {
+    "pdb_id": "6W9C",
+    "category": "viruses/covid19",
+    "structure_file": "data\\3d_structures\\viruses\\covid19\\6w9c.cif",
+    "url": "https://www.rcsb.org/structure/6W9C",
+    "title": "The crystal structure of papain-like protease of SARS CoV-2",
+    "keywords": "HYDROLASE",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.7
+    ]
+  },
+  {
+    "pdb_id": "7JMP",
+    "category": "viruses/covid19",
+    "structure_file": "data\\3d_structures\\viruses\\covid19\\7jmp.cif",
+    "url": "https://www.rcsb.org/structure/7JMP",
+    "title": "Crystal structure of SARS-CoV-2 receptor binding domain in complex with neutralizing antibody COVA2-39",
+    "keywords": "Viral Protein/IMMUNE SYSTEM",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      1.712
+    ]
+  },
+  {
+    "pdb_id": "6LZG",
+    "category": "viruses/covid19",
+    "structure_file": "data\\3d_structures\\viruses\\covid19\\6lzg.cif",
+    "url": "https://www.rcsb.org/structure/6LZG",
+    "title": "Structure of novel coronavirus spike receptor-binding domain complexed with its receptor ACE2",
+    "keywords": "VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.5
+    ]
+  },
+  {
+    "pdb_id": "7BV2",
+    "category": "viruses/covid19",
+    "structure_file": "data\\3d_structures\\viruses\\covid19\\7bv2.cif",
+    "url": "https://www.rcsb.org/structure/7BV2",
+    "title": "The nsp12-nsp7-nsp8 complex bound to the template-primer RNA and triphosphate form of Remdesivir(RTP)",
+    "keywords": "VIRAL PROTEIN",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      2.5
+    ]
+  },
+  {
+    "pdb_id": "6VXX",
+    "category": "viruses/covid19",
+    "structure_file": "data\\3d_structures\\viruses\\covid19\\6vxx.cif",
+    "url": "https://www.rcsb.org/structure/6VXX",
+    "title": "Structure of the SARS-CoV-2 spike glycoprotein (closed state)",
+    "keywords": "VIRAL PROTEIN",
+    "method": "ELECTRON MICROSCOPY",
+    "resolution": [
+      2.8
+    ]
+  },
+  {
+    "pdb_id": "4WE8",
+    "category": "viruses/influenza",
+    "structure_file": "data\\3d_structures\\viruses\\influenza\\4we8.cif",
+    "url": "https://www.rcsb.org/structure/4WE8",
+    "title": "The crystal structure of hemagglutinin of influenza virus A/Victoria/361/2011",
+    "keywords": "VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.1
+    ]
+  },
+  {
+    "pdb_id": "4WE4",
+    "category": "viruses/influenza",
+    "structure_file": "data\\3d_structures\\viruses\\influenza\\4we4.cif",
+    "url": "https://www.rcsb.org/structure/4WE4",
+    "title": "The crystal structure of hemagglutinin from 1968 H3N2 influenza virus",
+    "keywords": "VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.351
+    ]
+  },
+  {
+    "pdb_id": "1RUZ",
+    "category": "viruses/influenza",
+    "structure_file": "data\\3d_structures\\viruses\\influenza\\1ruz.cif",
+    "url": "https://www.rcsb.org/structure/1RUZ",
+    "title": "1918 H1 Hemagglutinin",
+    "keywords": "VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.9
+    ]
+  },
+  {
+    "pdb_id": "3ZTJ",
+    "category": "viruses/influenza",
+    "structure_file": "data\\3d_structures\\viruses\\influenza\\3ztj.cif",
+    "url": "https://www.rcsb.org/structure/3ZTJ",
+    "title": "Structure of influenza A neutralizing antibody selected from cultures of single human plasma cells in complex with human H3 Influenza haemagglutinin.",
+    "keywords": "IMMUNE SYSTEM/VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      3.41
+    ]
+  },
+  {
+    "pdb_id": "1AIK",
+    "category": "viruses/hiv",
+    "structure_file": "data\\3d_structures\\viruses\\hiv\\1aik.cif",
+    "url": "https://www.rcsb.org/structure/1AIK",
+    "title": "HIV GP41 CORE STRUCTURE",
+    "keywords": "VIRAL PROTEIN",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.0
+    ]
+  },
+  {
+    "pdb_id": "1QBR",
+    "category": "viruses/hiv",
+    "structure_file": "data\\3d_structures\\viruses\\hiv\\1qbr.cif",
+    "url": "https://www.rcsb.org/structure/1QBR",
+    "title": "HIV-1 PROTEASE INHIBITORS WIIH LOW NANOMOLAR POTENCY",
+    "keywords": "ASPARTYL PROTEASE",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      1.8
+    ]
+  },
+  {
+    "pdb_id": "1DLO",
+    "category": "viruses/hiv",
+    "structure_file": "data\\3d_structures\\viruses\\hiv\\1dlo.cif",
+    "url": "https://www.rcsb.org/structure/1DLO",
+    "title": "HUMAN IMMUNODEFICIENCY VIRUS TYPE 1",
+    "keywords": "NUCLEOTIDYLTRANSFERASE",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      2.7
+    ]
+  },
+  {
+    "pdb_id": "2B4C",
+    "category": "viruses/hiv",
+    "structure_file": "data\\3d_structures\\viruses\\hiv\\2b4c.cif",
+    "url": "https://www.rcsb.org/structure/2B4C",
+    "title": "Crystal structure of HIV-1 JR-FL gp120 core protein containing the third variable region (V3) complexed with CD4 and the X5 antibody",
+    "keywords": "Viral protein/Immune system",
+    "method": "X-RAY DIFFRACTION",
+    "resolution": [
+      3.3
+    ]
+  }
+]

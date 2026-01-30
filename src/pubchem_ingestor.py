@@ -30,7 +30,7 @@ class ChemicalCompound(BaseModel):
     inchi_key: str = ""
     synonyms: List[str] = Field(default_factory=list)
     source_pmids: List[str] = Field(default_factory=list)
-    
+    trial_ncts: List[str] = Field(default_factory=list)
     # Additional computed properties
     num_atoms: int = 0
     num_bonds: int = 0

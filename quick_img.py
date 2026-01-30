@@ -119,6 +119,15 @@ def demo_visual_search():
     """Demo: CLIP-powered visual search."""
     print_header("4️⃣  VISUAL SEARCH WITH CLIP")
     
+    # Check if transformers is available
+    try:
+        import transformers
+    except ImportError:
+        print("⚠️  transformers not installed")
+        print("Install with: pip install transformers")
+        print("Skipping visual search demo...")
+        return False
+    
     try:
         print("Initializing CLIP model...")
         clip = ImageEmbeddingGenerator()

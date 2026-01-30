@@ -392,7 +392,9 @@ class ImageManager:
         for subdir in ["structures_2d", "structures_3d", "pathways", "figures"]:
             path = self.cache_dir / subdir
             if path.exists():
-                for img_file in path.glob("*.png") + path.glob("*.jpeg"):
+                # Combine glob results properly
+                img_files = list(path.glob("*.png")) + list(path.glob("*.jpeg")) + list(path.glob("*.jpg"))
+                for img_file in img_files:
                     # Parse filename to get metadata
                     parts = img_file.stem.split("_")
                     if len(parts) >= 2:

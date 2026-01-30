@@ -16,8 +16,8 @@ import sys
 # Add parent to path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-
-from src.search import CloudSearch
+from src.query_val import BiologicalQueryValidator
+from src.search import HybridSearchEngine
 from app.llm_filter import LLMQueryProcessor, SearchIntent
 
 logging.basicConfig(level=logging.INFO)
@@ -49,7 +49,7 @@ class BiologicalResearchAgent:
         """Initialize the agent."""
         # Initialize search engine
         try:
-            self.search_engine = CloudSearch()
+            self.search_engine = HybridSearchEngine()
             logger.info("✓ Connected to Qdrant Cloud")
         except Exception as e:
             logger.warning(f"Could not connect to Qdrant: {e}")
@@ -68,22 +68,38 @@ class BiologicalResearchAgent:
             self.groq_client,
             mode=instructor.Mode.TOOLS
         )
-        
+        self.validator = BiologicalQueryValidator()
         logger.info("✓ Agent initialized")
     
     def query(self, user_query: str, search_limit: int = 10) -> AgentResponse:
-        """
-        Process a user query and return intelligent response.
-        
-        Args:
-            user_query: Natural language query from user
-            search_limit: Number of results to retrieve from vector DB
-            
-        Returns:
-            AgentResponse with answer, sources, and suggestions
-        """
+        """Process a user query and return intelligent response."""
         logger.info(f"Processing query: {user_query}")
-        
+        # STEP 0: Validate query is biological
+        is_valid, validation_reason = self.validator.is_biological_query(user_query)
+        if not is_valid:
+            logger.warning(f"Non-biological query rejected: {user_query}")
+            return AgentResponse(
+                answer=(
+                    "I'm specialized in biological and biomedical research. "
+                    "Your question doesn't appear to be related to biology, medicine, "
+                    "biochemistry, or biomedical research.\n\n"
+                    "I can help you with:\n"
+                    "• Drug discovery and compounds\n"
+                    "• Proteins, genes, and molecular biology\n"
+                    "• Diseases and treatments\n"
+                    "• Clinical trials\n"
+                    "• Research papers in life sciences\n\n"
+                    "Please ask a biology or medicine related question!"
+                ),
+                sources=[],
+                data_found=False,
+                related_queries=[
+                    "What are targeted cancer therapies?",
+                    "How do KRAS inhibitors work?",
+                    "What are the latest treatments for lung cancer?"
+                ],
+                reasoning=f"Query validation failed: {validation_reason}"
+            )
         # Step 1: Extract search intent using LLM
         intent = self.llm_processor.process_query(user_query)
         logger.info(f"Extracted intent: {intent.refined_query}")
@@ -92,12 +108,19 @@ class BiologicalResearchAgent:
         db_results = None
         if self.search_engine:
             try:
-                db_results = self.search_engine.search_by_text(
-                    intent.refined_query, 
-                    limit=search_limit
+                # FIX: Use the correct method
+                db_results = self.search_engine.search_multi_modal(
+                    query=intent.refined_query,
+                    search_papers=True,
+                    search_compounds=True,
+                    search_proteins=True,
+                    search_trials=True,
+                    limit_per_type=search_limit
                 )
                 logger.info(f"Found {len(db_results.get('papers', []))} papers, "
-                          f"{len(db_results.get('compounds', []))} compounds")
+                        f"{len(db_results.get('compounds', []))} compounds, "
+                        f"{len(db_results.get('proteins', []))} proteins, "
+                        f"{len(db_results.get('trials', []))} trials")
             except Exception as e:
                 logger.error(f"Search error: {e}")
                 db_results = None

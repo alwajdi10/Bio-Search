@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
 from src.ingestion_manager import EnhancedIngestionManager
-from src.qdrant_setup import EnhancedQdrantManager
+from src.qdrant_setup import EnhancedQdrantConfig
 from src.agent import BiologicalResearchAgent
 
 
@@ -71,19 +71,31 @@ def ingest_data():
     
     # Define research topics
     topics = [
-        {
-            "query": "KRAS inhibitor lung cancer",
-            "max_papers": 20,
-            "max_trials": 10,
-            "min_date": "2020/01/01"
-        },
-        {
-            "query": "CDK4/6 inhibitor breast cancer",
-            "max_papers": 15,
-            "max_trials": 8,
-            "min_date": "2021/01/01"
-        }
-    ]
+    {
+        "query": "KRAS inhibitor lung cancer",
+        "max_papers": 50,  # Increased from 20
+        "max_trials": 20,  # Increased from 10
+        "min_date": "2020/01/01"
+    },
+    {
+        "query": "CDK4/6 inhibitor breast cancer",
+        "max_papers": 50,  # Increased from 15
+        "max_trials": 20,  # Increased from 8
+        "min_date": "2021/01/01"
+    },
+    {
+        "query": "PD-1 checkpoint inhibitor melanoma",  # NEW
+        "max_papers": 40,
+        "max_trials": 15,
+        "min_date": "2021/01/01"
+    },
+    {
+        "query": "EGFR tyrosine kinase inhibitor",  # NEW
+        "max_papers": 40,
+        "max_trials": 15,
+        "min_date": "2020/01/01"
+    }
+]
     
     all_stats = []
     
@@ -149,7 +161,7 @@ def upload_to_qdrant():
     """Upload data to Qdrant Cloud."""
     print_header("☁️  UPLOADING TO QDRANT CLOUD")
     
-    manager = EnhancedQdrantManager()
+    manager = EnhancedQdrantConfig()
     
     # Create collections
     print("Creating collections...")

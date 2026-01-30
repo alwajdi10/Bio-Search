@@ -6,7 +6,7 @@ Enables: "find structures similar to this", "search for microscopy images of cel
 
 import torch
 import numpy as np
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Dict
 from pathlib import Path
 from PIL import Image
 import logging
@@ -17,12 +17,188 @@ try:
     CLIP_AVAILABLE = True
 except ImportError:
     CLIP_AVAILABLE = False
-    logging.warning("transformers not installed. Image search will be limited.")
+    CLIPProcessor = None
+    CLIPModel = None
+    logging.warning("transformers not installed. Run: pip install transformers")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
+class EnhancedImageSearchEngine:
+    """
+    Enhanced image search with biological context validation.
+    """
+    
+    def __init__(self, image_dir: str = "data/images", use_clip: bool = True):
+        """Initialize enhanced search engine."""
+        self.image_dir = Path(image_dir)
+        self.use_clip = use_clip and CLIP_AVAILABLE
+        
+        if self.use_clip:
+            self.embedding_gen = ImageEmbeddingGenerator()
+            logger.info("✓ Enhanced image search with CLIP enabled")
+        else:
+            raise ValueError("CLIP is required for enhanced image search")
+        
+        # Biological context validator
+        from src.query_val import BiologicalQueryValidator
+        self.validator = BiologicalQueryValidator()
+        
+        # Load and index images
+        self.images = []
+        self.embeddings = []
+        self._load_and_index_images()
+        
+        # Pre-define biological image categories
+        self.bio_categories = {
+            "structure_2d": ["chemical structure", "compound", "molecule", "drug"],
+            "structure_3d": ["protein", "3d structure", "crystal structure", "molecular model"],
+            "pathway": ["pathway", "signaling", "network", "interaction"],
+        }
+    
+    def _load_and_index_images(self):
+        """Load all images and generate embeddings."""
+        from src.image_manager import ImageManager
+        
+        manager = ImageManager(cache_dir=str(self.image_dir))
+        self.images = manager.get_all_cached_images()
+        
+        if not self.images:
+            logger.warning("No images found! Run image ingestion first.")
+            return
+        
+        logger.info(f"Found {len(self.images)} cached images")
+        logger.info("Generating CLIP embeddings...")
+        
+        # Generate embeddings
+        image_paths = [img.local_path for img in self.images if img.local_path]
+        self.embeddings = self.embedding_gen.batch_embed_images(image_paths, batch_size=32)
+        
+        # Store in image objects
+        for img, emb in zip(self.images, self.embeddings):
+            img.embedding = emb.tolist()
+        
+        logger.info(f"✓ Indexed {len(self.embeddings)} images")
+    
+    def search_by_text(
+        self, 
+        query: str, 
+        top_k: int = 10,
+        min_score: float = 0.2
+    ) -> List[dict]:
+        """
+        Enhanced text-to-image search with validation.
+        
+        Args:
+            query: Text query
+            top_k: Number of results
+            min_score: Minimum similarity score (0-1)
+            
+        Returns:
+            List of results or empty if query is invalid
+        """
+        # Validate query is biological
+        is_valid, reason = self.validator.is_biological_query(query)
+        
+        if not is_valid:
+            logger.warning(f"Non-biological image query rejected: {query}")
+            return []
+        
+        if not self.images:
+            logger.warning("No images in index")
+            return []
+        
+        # Generate query embedding
+        query_emb = self.embedding_gen.embed_text(query)
+        
+        # Compute similarities
+        similarities = []
+        for idx, img_emb in enumerate(self.embeddings):
+            score = np.dot(query_emb, img_emb)
+            if score >= min_score:
+                similarities.append((idx, float(score)))
+        
+        # Sort by score
+        similarities.sort(key=lambda x: x[1], reverse=True)
+        
+        # Get top results
+        results = []
+        for idx, score in similarities[:top_k]:
+            results.append({
+                "image": self.images[idx],
+                "score": score,
+                "query": query,
+                "url": self.images[idx].url or f"file://{self.images[idx].local_path}"
+            })
+        
+        logger.info(f"Found {len(results)} images for query: '{query}'")
+        return results
+    
+    def search_similar(
+        self, 
+        image_path: Union[str, Path], 
+        top_k: int = 5,
+        min_score: float = 0.3
+    ) -> List[dict]:
+        """
+        Find similar biological images.
+        
+        Args:
+            image_path: Query image path
+            top_k: Number of results
+            min_score: Minimum similarity
+            
+        Returns:
+            List of similar images
+        """
+        if not self.images:
+            return []
+        
+        # Validate image exists
+        if not Path(image_path).exists():
+            logger.error(f"Image not found: {image_path}")
+            return []
+        
+        # Embed query image
+        query_emb = self.embedding_gen.embed_image(image_path)
+        
+        # Find similar
+        similarities = []
+        for idx, img_emb in enumerate(self.embeddings):
+            score = np.dot(query_emb, img_emb)
+            if score >= min_score:
+                similarities.append((idx, float(score)))
+        
+        similarities.sort(key=lambda x: x[1], reverse=True)
+        
+        # Return results (skip first if it's the same image)
+        results = []
+        for idx, score in similarities[:top_k+1]:
+            if Path(self.images[idx].local_path) != Path(image_path):
+                results.append({
+                    "image": self.images[idx],
+                    "score": score,
+                    "url": self.images[idx].url
+                })
+        
+        return results[:top_k]
+    
+    def get_statistics(self) -> Dict:
+        """Get image library statistics."""
+        if not self.images:
+            return {"total": 0}
+        
+        from collections import Counter
+        
+        type_counts = Counter(img.image_type for img in self.images)
+        source_counts = Counter(img.source for img in self.images)
+        
+        return {
+            "total": len(self.images),
+            "by_type": dict(type_counts),
+            "by_source": dict(source_counts),
+            "has_embeddings": len(self.embeddings) > 0
+        }
 class ImageEmbeddingGenerator:
     """
     Generate embeddings for images using CLIP.
@@ -292,7 +468,7 @@ class ImageSearchEngine:
     
     def _load_image_index(self):
         """Load and index all images."""
-        from image_manager import ImageManager
+        from src.image_manager import ImageManager
         
         manager = ImageManager(cache_dir=str(self.image_dir))
         self.images = manager.get_all_cached_images()
