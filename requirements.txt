@@ -2,4 +2,4 @@ streamlit
 qdrant-client==1.11.3
 sentence-transformers==2.2.2
 torch>=2.5.0
-Biopython==1.81
+Bio
